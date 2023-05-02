@@ -37,6 +37,7 @@ login_manager.login_view = 'login'
 # db.session.commit()
 
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
