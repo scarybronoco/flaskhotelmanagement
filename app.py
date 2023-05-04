@@ -7,14 +7,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_migrate import Migrate
 
+#
+
 # Flask Instance
 app = Flask(__name__)
 # Add Database
 #  sqlite DB
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 # mysql db
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:scary123@localhost/our_user'
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'jdbc:mysql://DESKTOP-IAKNUB3:3306/our_user?user=root&password=scary123'
+# postgres://hotelmanagementflask_user:Nix02ZEZCHXALW6m5e7BxTt1qhZgOD17@dpg-ch8kdi1mbg54hi5l98ug-a.oregon-postgres.render.com/hotelmanagementflask
 # Secret key
 app.config['SECRET_KEY'] = "powertripbyjcole"
 # Initialize the database
@@ -29,18 +31,17 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
+
 # db.create_all()
 
 # insert data one time
 # admin = Admin(username='scary123', password=bcrypt.generate_password_hash('scarybronco', 20))
 # db.session.add(admin)
 # db.session.commit()
-
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return Users.query.get(int(user_id))
 
 
 # Create model
@@ -69,9 +70,6 @@ def __repr__(self):
     return '<Name %r>' % self.name
 
 
-
-
-
 class Reservation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     Title = db.Column(db.String(100), nullable=False)
@@ -97,9 +95,6 @@ class Admin(db.Model):
         return '<Name %r>' % self.username
 
 
-
-
-
 @app.route('/delete/<int:id>')
 def delete(id):
     user_to_delete = Users.query.get_or_404(id)
@@ -120,12 +115,6 @@ def delete(id):
         flash("Whoops! There was a problem deleting user, try again...")
         return render_template("add_user.html",
                                form=form, name=name, our_user=our_user)
-
-
-
-
-
-
 
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
@@ -153,8 +142,6 @@ def home():
 
 
 # in bracket (first_name=first_name)
-
-
 
 
 # Create Login page
