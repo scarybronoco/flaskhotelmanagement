@@ -239,7 +239,7 @@ def adminLogout():
         return redirect('/')
 
 
-@app.route('/user-added', methods=['GET', 'POST'])
+@app.route('/add_user', methods=['GET', 'POST'])
 def add_user():
     name = None
     form = UserForm()
